@@ -1,6 +1,6 @@
 {
     "name": "remithomas/rt-object",
-    "description": "MYSQL object",
+    "description": "Create an entity class to use mysql like NOSQL way.",
     "type": "library",
     "keywords": [
         "zf2","insert","duplicate","object","mysql","nosql"
@@ -13,7 +13,6 @@
             "homepage": "http://remithomas.fr/"
         }
     ],
-    "version": "1.0.0",
     "require": {
         "php": ">=5.3.3",
         "remithomas/rt-extends":"dev-master",
