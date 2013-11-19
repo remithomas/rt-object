@@ -158,3 +158,4 @@ $bMyObject = $myObject->isExisting();
 
 * remove data from category
 * some tools/javadoc
+* PHPunit tests
