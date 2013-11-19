@@ -1,0 +1,30 @@
+{
+    "name": "remithomas/rt-object",
+    "description": "MYSQL object",
+    "type": "library",
+    "keywords": [
+        "zf2","insert","duplicate","object","mysql","nosql"
+    ],
+    "homepage": "https://github.com/remithomas/rt-object",
+    "authors": [
+        {
+            "name": "Remi THOMAS",
+            "email": "remi.thomas@yahoo.fr",
+            "homepage": "http://remithomas.fr/"
+        }
+    ],
+    "version": "1.0.0",
+    "require": {
+        "php": ">=5.3.3",
+        "remithomas/rt-extends":"dev-master",
+        "zendframework/zendframework": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "RtObject": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
