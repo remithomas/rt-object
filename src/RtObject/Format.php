@@ -8,6 +8,7 @@ class Format{
     const FORMAT_TEXT = "text";
     const FORMAT_INTEGER = "integer";
     const FORMAT_DATETIME = "datetime";
+    const FORMAT_BOOLEAN = "boolean";
     
     /**
      * Get all available formats
@@ -19,6 +20,7 @@ class Format{
             self::FORMAT_TEXT,
             self::FORMAT_INTEGER,
             self::FORMAT_DATETIME,
+            self::FORMAT_BOOLEAN,
         );
     }
     
@@ -37,6 +39,41 @@ class Format{
                 return \Zend\Json\Json::decode($value);
             case self::FORMAT_INTEGER:
                 return (integer) $value;
+            case self::FORMAT_BOOLEAN:
+                return ($value == "true") ;
+                
+            default : 
+                return $value;
+        }
+    }
+
+    /**
+     * Encode the value for the DB
+     * @param multiple $value
+     * @param string $format
+     * @return string
+     */
+    public static function encodeValue($value, $format = self::FORMAT_TEXT){
+        // value
+        switch($format){
+            case self::FORMAT_TEXT:
+                return $value;
+            case self::FORMAT_JSON:
+                if(!is_string($value)){
+                    return \Zend\Json\Json::encode($value);
+                }
+                return $value;
+            case self::FORMAT_INTEGER:
+                return (integer) $value;
+            case self::FORMAT_BOOLEAN:
+                if($value == "true" || $value == true || $value == 1 || $value == "1"){
+                    return "true";
+                }else{
+                    return "false";
+                }
+                
+            default :
+                return $value;
         }
     }
 

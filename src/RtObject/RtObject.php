@@ -207,7 +207,7 @@ class RtObject{
             $this->_tableId => $this->getObjectId(),
             'category' => $category,
             'key' => $key,
-            'value' => $value,
+            'value' => Format::encodeValue($value, $format),
             'format' => $format
         ), $extraColumnData);
         
@@ -334,6 +334,49 @@ class RtObject{
         }
         
         return $returnArray;
+    }
+    
+    
+    public function searchObjects($search = array()){
+        
+        // init
+        $adapter = $this->getAdapter();
+        
+        return array();
+    }
+
+    /**
+     * Search one object
+     * @param array $search
+     * @return \RtObject\RtObject\RtObject
+     * @throws Exception
+     */
+    public function searchObject($search = array()){
+        
+        // no search fields
+        if(count($search) === 0){
+            throw new Exception("No search fields set");
+        }
+        
+        // init
+        $adapter = $this->getAdapter();
+        
+        $sql = new \Zend\Db\Sql\Sql($adapter, $this->_tableObject);
+        $select = $sql->select();
+        $select ->where($search)
+                ->limit(1);
+        
+        $stmt = $sql->prepareStatementForSqlObject($select);
+        $resultSet = new ResultSet();
+        $resultSet->initialize($stmt->execute());
+        
+        $keyId = $this->_tableId;
+        
+        foreach ($resultSet as $row){
+            $this->setObjectId($row->$keyId);
+        }
+        
+        return $this;
     }
     
     /**
