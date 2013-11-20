@@ -1,4 +1,4 @@
-rt-object 
+rt-object [![Build Status](https://travis-ci.org/remithomas/rt-object.png?branch=master)](https://travis-ci.org/remithomas/rt-object)
 ==========
 
 Create an entity class to use mysql like NOSQL way.
