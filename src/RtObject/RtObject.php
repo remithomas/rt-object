@@ -234,7 +234,7 @@ class RtObject{
      * @return \RtObject\RtObject\RtObject
      */
     public function setObjectId($objectId){
-        $this->_objectId = $objectId;
+        $this->_objectId = (integer) $objectId;
         return $this;
     }
     
@@ -253,7 +253,7 @@ class RtObject{
      */
     public function getObject(){
         // checking
-        if(is_null($this->_objectId)){
+        if(is_null($this->_objectId) || $this->_objectId == 0 || $this->_objectId == "0"){
             throw new \Exception(sprintf(
                 'The objectid [%s] is not set',
                 $this->_tableId
@@ -336,13 +336,89 @@ class RtObject{
         return $returnArray;
     }
     
-    
-    public function searchObjects($search = array()){
+    /**
+     * 
+     * @param array $search
+     * @param integer $limit
+     * @param integer $offset
+     * @param array $order
+     * @return array
+     * @throws Exception
+     */
+    public function searchObjects($search = array(), $limit = 100, $offset = 0, $order = array()){
+        
+        // no search fields
+        if(count($search) === 0){
+            throw new Exception("No search fields set");
+        }
+        
+        if(count($order)==0){
+            $order = array(
+            $this->_objectId . ' ASC'  
+            );
+        }
         
         // init
         $adapter = $this->getAdapter();
         
-        return array();
+        $sql = new \Zend\Db\Sql\Sql($adapter, $this->_tableObject);
+        $select = $sql->select();
+        $select ->where($search)
+                ->columns(array('*'))
+                ->limit($limit)
+                ->offset($offset);
+        
+        $stmt = $sql->prepareStatementForSqlObject($select);
+        $resultSet = new ResultSet();
+        $resultSet->initialize($stmt->execute());
+        
+        $keyId = $this->_tableId;
+        $return  = array();
+        
+        foreach ($resultSet as $row){
+            $return[] = $row->$keyId;
+        }
+        
+        return $return;
+    }
+    
+    /**
+     * 
+     * @param array $search
+     * @param integer $limit
+     * @param integer $offset
+     * @param array $order
+     * @return array
+     * @throws Exception
+     */
+    public function searchFullObjects($search = array(), $limit = 100, $offset = 0, $order = array()){
+        
+        // no search fields
+        if(count($search) === 0){
+            throw new Exception("No search fields set");
+        }
+        
+        if(count($order)==0){
+            $order = array(
+            $this->_objectId . ' ASC'  
+            );
+        }
+        
+        // init
+        $adapter = $this->getAdapter();
+        
+        $sql = new \Zend\Db\Sql\Sql($adapter, $this->_tableObject);
+        $select = $sql->select();
+        $select ->where($search)
+                ->columns(array('*'))
+                ->limit($limit)
+                ->offset($offset);
+        
+        $stmt = $sql->prepareStatementForSqlObject($select);
+        $resultSet = new ResultSet();
+        $resultSet->initialize($stmt->execute());
+        
+        return $resultSet->toArray();
     }
 
     /**
@@ -529,7 +605,7 @@ class RtObject{
      * @return boolean
      */
     public function isExisting(){
-        if($this->_objectId === 0){
+        if(is_null($this->_objectId ) || $this->_objectId == 0 || $this->_objectId == "0"){
             return false;
         }
         
